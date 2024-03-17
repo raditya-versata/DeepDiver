@@ -52,6 +52,10 @@ class Diver:
         completion = self.check_working_on_right_level(academic_data)
         print(completion.choices[0].message)
 
+        completion = self.check_2hr_learner(academic_data, coaching_data)
+        print(completion.choices[0].message)
+
+
     def check_progressing_optimally(self, academic_data):
         print("checking progressing optimally")
         progressing_source = self.find_element(academic_data, "Lessons_mastered_and")
@@ -82,10 +86,20 @@ class Diver:
         completion = self.get_openai_suggestion(prompts.right_level_prompt, json.dumps(bracketing_data))
         return completion
 
-    def check_2hr_learner(self, academic_data):
+    def check_2hr_learner(self, academic_data, coaching_data):
         print("checking 2hr learner")
+        learning_efficiency = self.find_element(academic_data, "Learning_Efficiency")
+        learning_metrics_per_week = self.find_element(academic_data, "Learning_Metrics_per")
+        time_commitment = self.find_element(academic_data, "Time_Commitment")
 
-        return None
+        is_2hr_data = {"time_commitment": time_commitment,
+                       "learning_metrics_per_week": learning_metrics_per_week,
+                       "learning_efficiency": learning_efficiency,
+                       "coaching_data": coaching_data}
+        print(is_2hr_data)
+        completion = self.get_openai_suggestion(prompts.is_2h_learner, json.dumps(is_2hr_data))
+
+        return completion
 
 
 

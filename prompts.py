@@ -1,11 +1,11 @@
 generic_response = \
-  ("# response #"
-   "The response should be in the form of JSON format with an element of "
-   "decision : a yes/no decision, "
-   "decision_description : decision description "
-   "reason: the reasoning for the decision made "
-   "evidence: the evidence that was used as based for decision"
-   "#######")
+    ("# response #"
+     "The response should be in the form of JSON format with an element of "
+     "decision : a yes/no decision, "
+     "decision_description : decision description "
+     "reason: the reasoning for the decision made "
+     "evidence: the evidence that was used as based for decision"
+     "#######")
 
 progressing_optimal_prompt = \
     ("# context #"
@@ -37,7 +37,7 @@ progressing_optimal_prompt = \
      "# audience #"
      "Student's guide and counselor"
      "######"
-     ""+generic_response
+     "" + generic_response
      )
 
 right_level_prompt = \
@@ -55,7 +55,7 @@ right_level_prompt = \
      "and one not yet (score below 90%) in the grade immediately above the mastered one."
      "######"
      "# style #"
-     "the returned result should have reasoning for the decision"
+     "the returned result should have reasoning for the decision and backed by evidence"
      "######"
      "# tone #"
      "Maintain a professional and positive tone for the student"
@@ -64,4 +64,43 @@ right_level_prompt = \
      "Student's guide and counselor"
      "######"
      "" + generic_response
+     )
+
+is_2h_learner = \
+    ("# context #"
+     "you are reviewing whether the student is considered a 2hr learner based on the provided JSON parameter"
+     "the provided data consist of time commitment, learning metrics per week, learning efficiency and coaching data"
+     "- time commitment : student's commitment for learning"
+     "- learning metrics per week : student's learning activity within a week, used as base for learning efficiency"
+     "- learning efficiency : the metrics for student's efficiency"
+     "- coaching data : student's coaching list on the given subject "
+     "#######"
+     "# objective #"
+     "conclude whether the student is considered a 2hr learner"
+     "a 2hr learner definition is as follow"
+     "- At least 25 minutes/school day dedicated to learning"
+     "- Strived to meet their 'lessons mastered’ targets without squandering their learning time."
+     "- Used the apps correctly and avoided learning anti-patterns."
+     "#######"
+     "# style #"
+     "the returned result should have reasoning for the decision and backed by evidence"
+     "#######"
+     "# tone #"
+     "Maintain a professional and positive tone for the student"
+     "#######"
+     "# audience #"
+     "Student's guide and counselor"
+     "#######"
+     "# response #"
+     "The response should be in the form of JSON format with an element of "
+     "decision : choose between 5 options"
+     "- Yes"
+     "- No - not putting enough time"
+     "- No - 30% waste"
+     "- No - 50% waste"
+     "- No - 90% waste"
+     "decision_description : decision description "
+     "reason: the reasoning for the decision made "
+     "evidence: the evidence that was used as based for decision"
+     "#######"
      )
