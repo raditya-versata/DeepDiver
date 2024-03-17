@@ -11,12 +11,13 @@ class Diver:
         self.academic_data = {}
         self.client = OpenAI()
 
-    def define_parameters(self, name, email, date_start, date_end, subject):
+    def define_parameters(self, name, email, date_start, date_end, subject, inquiry):
         self.name = name
         self.email = email
         self.date_start = date_start
         self.date_end = date_end
         self.subject = subject
+        self.inquiry = inquiry
 
     def download_academic_data(self):
         print("Downloading academic data...")
@@ -46,15 +47,27 @@ class Diver:
         academic_data = json.load(
             open("sample/Branson Pfiester.reading.20240101-20240129.academic.json", "r", encoding="utf8"))
 
-        completion = self.check_progressing_optimally(academic_data)
-        print(completion.choices[0].message)
+        progress_completion = self.check_progressing_optimally(academic_data)
+        print(progress_completion.choices[0].message.content)
 
-        completion = self.check_working_on_right_level(academic_data)
-        print(completion.choices[0].message)
+        level_completion = self.check_working_on_right_level(academic_data)
+        print(level_completion.choices[0].message.content)
 
-        completion = self.check_2hr_learner(academic_data, coaching_data)
-        print(completion.choices[0].message)
+        learner_2hr_completion = self.check_2hr_learner(academic_data, coaching_data)
+        print(learner_2hr_completion.choices[0].message.content)
 
+        summary_data = {
+            "progressing_optimally": progress_completion.choices[0].message.content,
+            "correct_level": level_completion.choices[0].message.content,
+            "2hr_learner": learner_2hr_completion.choices[0].message.content
+        }
+
+        reason_progress_completion = self.check_reason_for_lack_of_progression(academic_data, coaching_data,
+                                                                               summary_data)
+        print(reason_progress_completion.choices[0].message.content)
+        summary_data["reason_progress_completion"] = reason_progress_completion.choices[0].message.content
+
+        return summary_data
 
     def check_progressing_optimally(self, academic_data):
         print("checking progressing optimally")
@@ -78,7 +91,7 @@ class Diver:
         element_name = list(bracketing_list.keys())[0]
         bracketing_status = {"bracketing_status": []}
         for element in bracketing_list[element_name]:
-            if element["Subject"].lower()== self.subject.lower():
+            if element["Subject"].lower() == self.subject.lower():
                 bracketing_status["bracketing_status"].append(element)
         bracketing_data = {"bracketing_status": bracketing_status, "standardized_tests": standardized_tests}
         print(standardized_tests)
@@ -101,9 +114,23 @@ class Diver:
 
         return completion
 
+    def check_reason_for_lack_of_progression(self, academic_data, coaching_data, summary_data):
+        print("checking reason for lack of progression")
+
+        progress_data = {
+            "summary": summary_data,
+            "academic_data": academic_data,
+            "coaching_data": coaching_data
+        }
+
+        completion = self.get_openai_suggestion(prompts.reason_of_progression, json.dumps(progress_data))
+        return completion
 
 
 if __name__ == '__main__':
     diver = Diver()
-    diver.define_parameters('Branson Pfiester', 'branson.pfiester@alpha.school', '2024-01-01', '2024-01-29', 'reading')
+    diver.define_parameters('Branson Pfiester', 'branson.pfiester@alpha.school',
+                            '2024-01-01', '2024-01-29', 'reading',
+                            "Is the student struggling? "
+                            "Is there underlying friction or learning strategies that may assist her productivity as part of this new plan?")
     diver.process_with_openai()
