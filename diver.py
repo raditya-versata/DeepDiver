@@ -2,46 +2,14 @@ import json
 
 import requests
 from openai import OpenAI
-
-progressing_optimal_prompt = \
-    ("# context #"
-     "you are reviewer for the values of the student's progress based on "
-     "the given json parameters."
-     "the json consist of summary"
-     "on the summary contain the total number of mastered lesson, the Levels Mastered vs target, and accuracy"
-     "the lesson mastered is the total number of mastered lesson"
-     "the lesson targeted is the total number of target lessons to be mastered"
-     "the levels mastered vs is the percentage of the mastered lesson vs the targeted lesson and it is denoted as "
-     "fraction value of the percentage, "
-     "for example the mastered lessons of 7 and the levels mastered vs  of "
-     "0.7 means the target is 10 and this didn't reached the target and the other way around"
-     "a mastered lesson of 15 and the level mastered vs of 1.5 means the target is 10 and this reached the "
-     "target properly"
-     "the accuracy also denoted as a fraction number"
-     "#######"
-     "# objective #"
-     "conclude whether the student are progressing optimally or suboptimally"
-     "Suboptimal progress is indicated by mastering less than 70% of the lesson target in the period. Struggling "
-     "students often have low accuracy (below 80%)."
-     "#######"
-     "# style #"
-     "the returned result should have reasoning for the decision"
-     "######"
-     "# tone #"
-     "Maintain a professional and positive tone for the student"
-     "######"
-     "# audience #"
-     "Student's guide and counselor"
-     "######"
-     "# response #"
-     "The response should be in the form of JSON with the a yes/no decision, decision description and reasoning in "
-     "different element")
+import prompts
 
 
 class Diver:
 
     def __init__(self):
         self.academic_data = {}
+        self.client = OpenAI()
 
     def define_parameters(self, name, email, date_start, date_end, subject):
         self.name = name
@@ -57,40 +25,71 @@ class Diver:
         print(f"Downloading coaching data...")
 
     def find_element(self, data, element):
-        found_item = {element: value for key, value in data.items() if element.lower() in key.lower()}
-
+        found_item = {key: value for key, value in data.items() if element.lower() in key.lower()}
         return found_item
+
+    def get_openai_suggestion(self, system_prompt, user_prompt):
+        return self.client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system",
+                 "content": system_prompt},
+                {"role": "user", "content": user_prompt}
+            ]
+        )
 
     def process_with_openai(self):
         print("Processing")
 
         coaching_data = json.load(
-            open("sample/Branson Pfiester.language.20240101-20240129.coaching.json", "r", encoding="utf8"))
+            open("sample/Branson Pfiester.reading.20240101-20240129.coaching.json", "r", encoding="utf8"))
         academic_data = json.load(
-            open("sample/Branson Pfiester.language.20240101-20240129.academic.json", "r", encoding="utf8"))
+            open("sample/Branson Pfiester.reading.20240101-20240129.academic.json", "r", encoding="utf8"))
 
+        completion = self.check_progressing_optimally(academic_data)
+        print(completion.choices[0].message)
+
+        completion = self.check_working_on_right_level(academic_data)
+        print(completion.choices[0].message)
+
+    def check_progressing_optimally(self, academic_data):
+        print("checking progressing optimally")
         progressing_source = self.find_element(academic_data, "Lessons_mastered_and")
         # let's add helper definition of Target  lesson
-        for element in progressing_source["Lessons_mastered_and"]:
+        element_name = list(progressing_source.keys())[0]
+        for element in progressing_source[element_name]:
             target = element["Levels Mastered vs"]
-            element["Lessons Targeted"] = int(int(element["Lessons Mastered"])/float(target[" Target"]))
+            element["Lessons Targeted"] = int(int(element["Lessons Mastered"]) / float(target[" Target"]))
         learning_metrics = self.find_element(academic_data, "Learning_Metrics_per")
-        progressing_data = {"summary": progressing_source, "details":learning_metrics}
+        progressing_data = {"summary": progressing_source, "details": learning_metrics}
         print(progressing_data)
+        completion = self.get_openai_suggestion(prompts.progressing_optimal_prompt, json.dumps(progressing_source))
+        return completion
 
-        client = OpenAI()
+    def check_working_on_right_level(self, academic_data):
+        print("checking working on right level")
+        standardized_tests = self.find_element(academic_data, "Standardized_Test")
+        bracketing_list = self.find_element(academic_data, "Bracketing_status")
+        # cleaning bracketing_status to only take the given subject
+        element_name = list(bracketing_list.keys())[0]
+        bracketing_status = {"bracketing_status": []}
+        for element in bracketing_list[element_name]:
+            if element["Subject"].lower()== self.subject.lower():
+                bracketing_status["bracketing_status"].append(element)
+        bracketing_data = {"bracketing_status": bracketing_status, "standardized_tests": standardized_tests}
+        print(standardized_tests)
+        print(bracketing_status)
+        completion = self.get_openai_suggestion(prompts.right_level_prompt, json.dumps(bracketing_data))
+        return completion
 
-        completion = client.chat.completions.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {"role": "system",
-                 "content": progressing_optimal_prompt},
-                {"role": "user", "content": json.dumps(progressing_source)}
-            ]
-        )
-        print(completion.choices[0].message)
+    def check_2hr_learner(self, academic_data):
+        print("checking 2hr learner")
+
+        return None
+
 
 
 if __name__ == '__main__':
     diver = Diver()
+    diver.define_parameters('Branson Pfiester', 'branson.pfiester@alpha.school', '2024-01-01', '2024-01-29', 'reading')
     diver.process_with_openai()
