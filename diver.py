@@ -20,9 +20,9 @@ progressing_optimal_prompt = \
      "the accuracy also denoted as a fraction number"
      "#######"
      "# objective #"
-     "conclude whether the student are progressing optimally or not"
-     "mastering less than 0.7 of the lesson target in the period means the student is not progressing optimally"
-     "Struggling students often have low accuracy (below 0.8) in the summary"
+     "conclude whether the student are progressing optimally or suboptimally"
+     "Suboptimal progress is indicated by mastering less than 70% of the lesson target in the period. Struggling "
+     "students often have low accuracy (below 80%)."
      "#######"
      "# style #"
      "the returned result should have reasoning for the decision"
@@ -34,7 +34,8 @@ progressing_optimal_prompt = \
      "Student's guide and counselor"
      "######"
      "# response #"
-     "The response should be in the form of JSON with the decision and reasoning in different element")
+     "The response should be in the form of JSON with the a yes/no decision, decision description and reasoning in "
+     "different element")
 
 
 class Diver:
