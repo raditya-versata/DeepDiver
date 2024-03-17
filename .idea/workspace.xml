@@ -4,10 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4d040db5-f6f4-4d69-a7dc-5da18f61cbe1" name="Changes" comment="added checking on 2hr learner">
+    <list default="true" id="4d040db5-f6f4-4d69-a7dc-5da18f61cbe1" name="Changes" comment="added checking on reason for lack of progression">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/diver.py" beforeDir="false" afterPath="$PROJECT_DIR$/diver.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/prompts.py" beforeDir="false" afterPath="$PROJECT_DIR$/prompts.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -96,7 +95,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1710615249787</updated>
-      <workItem from="1710615252280" duration="23815000" />
+      <workItem from="1710615252280" duration="25952000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit">
       <option name="closed" value="true" />
@@ -154,7 +153,15 @@
       <option name="project" value="LOCAL" />
       <updated>1710705435437</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="added checking on reason for lack of progression">
+      <option name="closed" value="true" />
+      <created>1710709890898</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1710709890898</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -179,9 +186,10 @@
     <MESSAGE value="add some more formatting" />
     <MESSAGE value="added checking on right level" />
     <MESSAGE value="added checking on 2hr learner" />
-    <option name="LAST_COMMIT_MESSAGE" value="added checking on 2hr learner" />
+    <MESSAGE value="added checking on reason for lack of progression" />
+    <option name="LAST_COMMIT_MESSAGE" value="added checking on reason for lack of progression" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/DeepDiver$diver.coverage" NAME="diver.py Coverage Results" MODIFIED="1710709611441" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/DeepDiver$diver.coverage" NAME="diver.py Coverage Results" MODIFIED="1710711759099" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

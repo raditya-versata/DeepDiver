@@ -1,4 +1,5 @@
 import json
+import os
 
 import requests
 from openai import OpenAI
@@ -8,6 +9,12 @@ import prompts
 class Diver:
 
     def __init__(self):
+        self.inquiry = None
+        self.subject = None
+        self.date_end = None
+        self.date_start = None
+        self.name = None
+        self.email = None
         self.academic_data = {}
         self.client = OpenAI()
 
@@ -19,11 +26,60 @@ class Diver:
         self.subject = subject
         self.inquiry = inquiry
 
-    def download_academic_data(self):
+    def get_academic_data(self):
         print("Downloading academic data...")
+        token = os.environ.get("ACADEMIC_API_KEY")
+        print(token)
+        headers = {
+            'Authorization': f"{token}"
+        }
+
+        parameters = {
+            "student": self.name,
+            "subject": self.subject,
+            "startDate": self.date_start,
+            "endDate": self.date_end
+        }
+        response = requests.get("https://hpjgmbk65zgzff64b6y7vhw2ua0sytlh.lambda-url.us-east-1.on.aws",
+                                params=parameters, headers=headers)
+        if response.status_code == 200:
+            data = response.json()
+
+            # Checking if 'url' is in the JSON response
+            if 'url' in data:
+                # If 'url' exists, we use it for another GET request
+                second_response = requests.get(data['url'])
+                if second_response.status_code == 200:
+                    # Return the JSON data from the second request
+                    return second_response.json()
+                else:
+                    raise Exception(f"Second request failed with status {second_response.status_code}")
+            else:
+                raise Exception("'url' not found in the received JSON")
+        else:
+            raise Exception(f"First request failed with status {response.status_code}")
 
     def get_coaching_data(self):
         print(f"Downloading coaching data...")
+        token = os.environ.get("COACHING_API_KEY")
+        print(token)
+        headers = {
+            'Authorization': f"{token}"
+        }
+        parameters = {
+            "email": self.email,
+            "startDate": self.date_start,
+            "endDate": self.date_end,
+            "subject": self.subject
+        }
+        response = requests.get("https://mk62mbxkbe6flyv44eli5shrhi0hinml.lambda-url.us-east-1.on.aws",
+                                params=parameters, headers=headers)
+        if response.status_code == 200:
+            print(response.json())
+            return response.json()
+        else:
+            raise Exception(f"Request failed with status {response.status_code}")
+
 
     def find_element(self, data, element):
         found_item = {key: value for key, value in data.items() if element.lower() in key.lower()}
@@ -42,10 +98,12 @@ class Diver:
     def process_with_openai(self):
         print("Processing")
 
-        coaching_data = json.load(
-            open("sample/Branson Pfiester.reading.20240101-20240129.coaching.json", "r", encoding="utf8"))
-        academic_data = json.load(
-            open("sample/Branson Pfiester.reading.20240101-20240129.academic.json", "r", encoding="utf8"))
+        # coaching_data = json.load(
+        #     open("sample/Branson Pfiester.reading.20240101-20240129.coaching.json", "r", encoding="utf8"))
+        # academic_data = json.load(
+        #     open("sample/Branson Pfiester.reading.20240101-20240129.academic.json", "r", encoding="utf8"))
+        academic_data = self.get_academic_data()
+        coaching_data = self.get_coaching_data()
 
         progress_completion = self.check_progressing_optimally(academic_data)
         print(progress_completion.choices[0].message.content)
@@ -125,6 +183,7 @@ class Diver:
 
         completion = self.get_openai_suggestion(prompts.reason_of_progression, json.dumps(progress_data))
         return completion
+
 
 
 if __name__ == '__main__':
