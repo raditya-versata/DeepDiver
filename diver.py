@@ -124,6 +124,9 @@ class Diver:
         # print(reason_progress_completion.choices[0].message.content)
         summary_data["reason_progress_completion"] = reason_progress_completion.choices[0].message.content
 
+        other_insight_completion = self.check_other_insight(academic_data, coaching_data, summary_data)
+        summary_data["other_insight"] = other_insight_completion.choices[0].message.content
+
         important_completion = self.answer_important_problem(academic_data, coaching_data, summary_data)
         # print(important_completion.choices[0].message.content)
 
@@ -196,6 +199,16 @@ class Diver:
         }
 
         completion = self.get_openai_suggestion(prompts.reason_of_progression, json.dumps(progress_data))
+        return completion
+
+    def check_other_insight(self, academic_data, coaching_data, summary_data):
+        print("checking other insight")
+        important_data = {
+            "summary": summary_data,
+            "academic_data": academic_data,
+            "coaching_data": coaching_data
+        }
+        completion = self.get_openai_suggestion(prompts.other_insight_prompt(self.inquiry), json.dumps(important_data))
         return completion
 
     def answer_important_problem(self, academic_data, coaching_data, summary_data):

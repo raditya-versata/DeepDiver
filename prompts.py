@@ -143,6 +143,29 @@ reason_of_progression = \
      )
 
 
+def other_insight_prompt(question):
+    return ("# context #"
+            "you are to determine if there's any other insight based on the given JSON data that contain summary data "
+            "and underlying data that build the summary data"
+            ""
+            "#######"
+            "# objective #"
+            "determine if there's any other insight based on the given question"
+            + question +
+            "#######"
+            "# style #"
+            "the returned result should have reasoning for the decision and backed by evidence"
+            "#######"
+            "# tone #"
+            "Maintain a professional and positive tone for the student"
+            "#######"
+            "# audience #"
+            "Student's guide and counselor"
+            "#######"
+            + generic_response
+            )
+
+
 def important_problem_prompt(context, objective):
     return ("# context #"
             "you are answering a question being question based on the given json entries" +
@@ -152,22 +175,21 @@ def important_problem_prompt(context, objective):
             "the other entries is the base information that was used in the generating the summary_data"
             "#######"
             "# objective #"
-            "\n" + objective + "\n"
-                               "#######"
-                               "# style #"
-                               "the returned result should have reasoning for the decision and backed by evidence"
-                               "#######"
-                               "# tone #"
-                               "Maintain a professional and positive tone for the student"
-                               "#######"
-                               "# audience #"
-                               "Student's guide and counselor"
-                               "#######"
-                               "# response #"
-                               "The response should be in the form of JSON format with an element of "
-                               "answer : a professional answer the given problem"
-                               "#######"
-
+            "\n" + objective + "\n" +
+            "#######"
+            "# style #"
+            "the returned result should have reasoning for the decision and backed by evidence"
+            "#######"
+            "# tone #"
+            "Maintain a professional and positive tone for the student"
+            "#######"
+            "# audience #"
+            "Student's guide and counselor"
+            "#######"
+            "# response #"
+            "The response should be in the form of JSON format with an element of "
+            "answer : a professional answer the given problem"
+            "#######"
             )
 
 

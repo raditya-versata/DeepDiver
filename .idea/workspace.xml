@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4d040db5-f6f4-4d69-a7dc-5da18f61cbe1" name="Changes" comment="added getting data from server directly">
+    <list default="true" id="4d040db5-f6f4-4d69-a7dc-5da18f61cbe1" name="Changes" comment="complete all answering sections">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/diver.py" beforeDir="false" afterPath="$PROJECT_DIR$/diver.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/prompts.py" beforeDir="false" afterPath="$PROJECT_DIR$/prompts.py" afterDir="false" />
@@ -96,7 +96,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1710615249787</updated>
-      <workItem from="1710615252280" duration="30171000" />
+      <workItem from="1710615252280" duration="30814000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit">
       <option name="closed" value="true" />
@@ -170,7 +170,15 @@
       <option name="project" value="LOCAL" />
       <updated>1710712412063</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="complete all answering sections">
+      <option name="closed" value="true" />
+      <created>1710742105608</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1710742105608</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -197,9 +205,10 @@
     <MESSAGE value="added checking on 2hr learner" />
     <MESSAGE value="added checking on reason for lack of progression" />
     <MESSAGE value="added getting data from server directly" />
-    <option name="LAST_COMMIT_MESSAGE" value="added getting data from server directly" />
+    <MESSAGE value="complete all answering sections" />
+    <option name="LAST_COMMIT_MESSAGE" value="complete all answering sections" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/DeepDiver$diver.coverage" NAME="diver.py Coverage Results" MODIFIED="1710741902566" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/DeepDiver$diver.coverage" NAME="diver.py Coverage Results" MODIFIED="1710742026748" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
