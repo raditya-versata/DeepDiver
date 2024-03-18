@@ -20,9 +20,8 @@ in case that it is needed to be run locally we can just open diver.py and change
 the parameter can be modified in line 255
 
 ```
-    diver.define_parameters('Branson Pfiester', 'branson.pfiester@alpha.school',
-                            '2024-01-01', '2024-01-29', 'reading',
-                            "Is the student struggling? "
-                            "Is there underlying friction or learning strategies that may assist her productivity as part of this new plan?")
-
+diver.define_parameters('Branson Pfiester', 'branson.pfiester@alpha.school',
+                        '2024-01-01', '2024-01-29', 'reading',
+                        "Is the student struggling? "
+                        "Is there underlying friction or learning strategies that may assist her productivity as part of this new plan?")
 ```
