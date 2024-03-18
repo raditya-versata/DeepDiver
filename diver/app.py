@@ -9,7 +9,7 @@ def lambda_handler(event, context):
     if body:
         # The body might be a stringified JSON, so we need to parse it
         params = json.loads(body)
-
+        print(params)
         if 'studentName' in params:
             student_name = params['studentName']
         else:
@@ -38,7 +38,7 @@ def lambda_handler(event, context):
         if 'question' in params:
             question = params['question']
         else:
-            reason = reason + "No endDate provided\n"
+            reason = reason + "No question provided\n"
             fail = True
 
         if not fail:

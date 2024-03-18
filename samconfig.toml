@@ -17,6 +17,10 @@ lint = true
 capabilities = "CAPABILITY_IAM"
 confirm_changeset = true
 resolve_s3 = true
+s3_prefix = "radityap-deep-diver"
+region = "us-east-1"
+parameter_overrides = "AgentName=\"radityaperdhevi\" OpenAIKey=\"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\" AcademicKey=\"-ehN=MkFaIk/iDMinaaoar?fJwbRlKpqEqWQ11cFxU=ibqwQe9Uj0eF6XP-6JgvT\" CoachingKey=\"qVSA4LC9SdTrsKezwHlhD9r=5cH5tPZLrG3e24kRZNaLrnLIm4jk0cN2YfgquIRN\""
+image_repositories = []
 
 [default.package.parameters]
 resolve_s3 = true
