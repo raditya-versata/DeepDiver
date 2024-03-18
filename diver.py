@@ -80,7 +80,6 @@ class Diver:
         else:
             raise Exception(f"Request failed with status {response.status_code}")
 
-
     def find_element(self, data, element):
         found_item = {key: value for key, value in data.items() if element.lower() in key.lower()}
         return found_item
@@ -98,21 +97,21 @@ class Diver:
     def process_with_openai(self):
         print("Processing")
 
-        # coaching_data = json.load(
-        #     open("sample/Branson Pfiester.reading.20240101-20240129.coaching.json", "r", encoding="utf8"))
-        # academic_data = json.load(
-        #     open("sample/Branson Pfiester.reading.20240101-20240129.academic.json", "r", encoding="utf8"))
-        academic_data = self.get_academic_data()
-        coaching_data = self.get_coaching_data()
+        coaching_data = json.load(
+            open("sample/Branson Pfiester.reading.20240101-20240129.coaching.json", "r", encoding="utf8"))
+        academic_data = json.load(
+            open("sample/Branson Pfiester.reading.20240101-20240129.academic.json", "r", encoding="utf8"))
+        # academic_data = self.get_academic_data()
+        # coaching_data = self.get_coaching_data()
 
         progress_completion = self.check_progressing_optimally(academic_data)
-        print(progress_completion.choices[0].message.content)
+        # print(progress_completion.choices[0].message.content)
 
         level_completion = self.check_working_on_right_level(academic_data)
-        print(level_completion.choices[0].message.content)
+        # print(level_completion.choices[0].message.content)
 
         learner_2hr_completion = self.check_2hr_learner(academic_data, coaching_data)
-        print(learner_2hr_completion.choices[0].message.content)
+        # print(learner_2hr_completion.choices[0].message.content)
 
         summary_data = {
             "progressing_optimally": progress_completion.choices[0].message.content,
@@ -122,8 +121,23 @@ class Diver:
 
         reason_progress_completion = self.check_reason_for_lack_of_progression(academic_data, coaching_data,
                                                                                summary_data)
-        print(reason_progress_completion.choices[0].message.content)
+        # print(reason_progress_completion.choices[0].message.content)
         summary_data["reason_progress_completion"] = reason_progress_completion.choices[0].message.content
+
+        important_completion = self.answer_important_problem(academic_data, coaching_data, summary_data)
+        # print(important_completion.choices[0].message.content)
+
+        summary_data["important_problem"] = important_completion.choices[0].message.content
+
+        need_todo_completion = self.answer_what_need_to_be_done(academic_data, coaching_data, summary_data)
+
+        summary_data["alpha_needs_todo"] = need_todo_completion.choices[0].message.content
+
+        student_suggestion_completion = self.answer_suggestion_for_student(academic_data, coaching_data, summary_data)
+        print(student_suggestion_completion.choices[0].message.content)
+        summary_data["student_suggestion"] = student_suggestion_completion.choices[0].message.content
+
+        # print(summary_data)
 
         return summary_data
 
@@ -184,6 +198,43 @@ class Diver:
         completion = self.get_openai_suggestion(prompts.reason_of_progression, json.dumps(progress_data))
         return completion
 
+    def answer_important_problem(self, academic_data, coaching_data, summary_data):
+        print("answering important problem")
+        important_data = {
+            "summary": summary_data,
+            "academic_data": academic_data,
+            "coaching_data": coaching_data
+        }
+        prompt = prompts.important_problem_prompt(json.dumps(important_data),
+                                                  "After you perform your analysis, this can be see in summary_data, "
+                                                  "summarize your findings in a way that"
+                                                  "clearly explains the causes of the problem statement")
+        completion = self.get_openai_suggestion(prompt, self.inquiry)
+        return completion
+
+    def answer_what_need_to_be_done(self, academic_data, coaching_data, summary_data):
+        print("answering what_need_to_be_done")
+        important_data = {
+            "summary": summary_data,
+            "academic_data": academic_data,
+            "coaching_data": coaching_data
+        }
+        prompt = prompts.important_problem_prompt(json.dumps(important_data),
+                                                  "Clearly state what needs to be done and by whom to fix the problem "
+                                                  "and help the student learn more effectively.")
+        completion = self.get_openai_suggestion(prompt, self.inquiry)
+        return completion
+
+    def answer_suggestion_for_student(self, academic_data, coaching_data, summary_data):
+        print("answering suggestion_for_student")
+        important_data = {
+            "summary": summary_data,
+            "academic_data": academic_data,
+            "coaching_data": coaching_data
+        }
+        prompt = prompts.message_to_student_prompt
+        completion = self.get_openai_suggestion(prompt, json.dumps(important_data))
+        return completion
 
 
 if __name__ == '__main__':

@@ -141,3 +141,63 @@ reason_of_progression = \
      "#######"
 
      )
+
+
+def important_problem_prompt(context, objective):
+    return ("# context #"
+            "you are answering a question being question based on the given json entries" +
+            "\n" + context + "\n" +
+            "the JSON entries consist of summary that derived from previous process and need to be used as main "
+            "insight for the question"
+            "the other entries is the base information that was used in the generating the summary_data"
+            "#######"
+            "# objective #"
+            "\n" + objective + "\n"
+                               "#######"
+                               "# style #"
+                               "the returned result should have reasoning for the decision and backed by evidence"
+                               "#######"
+                               "# tone #"
+                               "Maintain a professional and positive tone for the student"
+                               "#######"
+                               "# audience #"
+                               "Student's guide and counselor"
+                               "#######"
+                               "# response #"
+                               "The response should be in the form of JSON format with an element of "
+                               "answer : a professional answer the given problem"
+                               "#######"
+
+            )
+
+
+message_to_student_prompt = \
+    ("# context #"
+     "you are creating recommendation based on this given json data" +
+     "the JSON entries consist of summary that derived from previous process and need to be used as main "
+     "insight for the recommendation"
+     "the other entries is the base information that was used in the generating the summary_data"
+     "#######"
+     "# objective #"
+     "create a recommendation based on the given json from a student's guide perspective to his/her student in "
+     "order to progress on the student's learning journey, and should there be no need to propose for an "
+     "enhancement, provide a word of encouragement to the student to increase their confidence in the learning."
+     "Write what the student should do in a way that is clear and easy for the student to understand. If the student "
+     "follows this recommendation, they should learn more effectively."
+     "journey"
+     "#######"
+     "# style #"
+     "the returned result should have reasoning for the decision and backed by evidence"
+     "#######"
+     "# tone #"
+     "Maintain a professional and positive tone for the student"
+     "#######"
+     "# audience #"
+     "Student that are being reviewed in the data provided"
+     "#######"
+     "# response #"
+     "The response should be in the form of JSON format with an element of "
+     "answer : a professional answer the given problem"
+     "#######"
+
+     )
