@@ -1,0 +1,69 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  radityap-deep-diver
+
+  Sample SAM Template for radityap-deep-diver
+
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Timeout: 15
+    MemorySize: 128
+
+    Tracing: Active
+    # You can add LoggingConfig parameters such as the Logformat, Log Group, and SystemLogLevel or ApplicationLogLevel. Learn more here https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-resource-function.html#sam-function-loggingconfig.
+    LoggingConfig:
+      LogFormat: JSON
+  Api:
+    TracingEnabled: true
+
+Parameters:
+  AgentName:
+    Type: String
+    Description: Name of the Agent
+  OpenAIKey:
+    Type: String
+    Description: OpenAI Key
+  AcademicKey:
+    Type: String
+    Description: Academic Key
+  CoachingKey:
+    Type: String
+    Description: Coaching Key
+
+Resources:
+  DeepDiverFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      FunctionName: !Sub '${AgentName}-DeepDiverFunction'
+      CodeUri: app
+      Handler: lambda_handler
+      Runtime: python3.12
+      Architectures:
+      - x86_64
+      Environment:
+        Variables:
+          OPENAI_API_KEY: !Sub "${OpenAIKey}"
+          COACHING_API_KEY: !Sub "${CoachingKey}"
+          ACADEMIC_API_KEY: !Sub "${AcademicKey}"
+      Events:
+        HelloWorld:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /getRecommendation
+            Method: post
+
+Outputs:
+  # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
+  # Find out more about other implicit resources you can reference within SAM
+  # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
+  DeepDiverFunctionApi:
+    Description: API Gateway endpoint URL for Prod stage for Hello World function
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/getRecommendation/"
+  DeepDiverFunction:
+    Description: Hello World Lambda Function ARN
+    Value: !GetAtt DeepDiverFunction.Arn
+  DeepDiverFunctionIamRole:
+    Description: Implicit IAM Role created for Deep Diver Function
+    Value: !GetAtt DeepDiverFunctionRole.Arn
