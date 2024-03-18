@@ -160,3 +160,6 @@ cython_debug/
 #.idea/
 
 sample/
+
+samconfig.toml
+.aws-sam
