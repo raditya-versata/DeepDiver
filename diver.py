@@ -97,12 +97,12 @@ class Diver:
     def process_with_openai(self):
         print("Processing")
 
-        coaching_data = json.load(
-            open("sample/Branson Pfiester.reading.20240101-20240129.coaching.json", "r", encoding="utf8"))
-        academic_data = json.load(
-            open("sample/Branson Pfiester.reading.20240101-20240129.academic.json", "r", encoding="utf8"))
-        # academic_data = self.get_academic_data()
-        # coaching_data = self.get_coaching_data()
+        # coaching_data = json.load(
+        #     open("sample/Branson Pfiester.reading.20240101-20240129.coaching.json", "r", encoding="utf8"))
+        # academic_data = json.load(
+        #     open("sample/Branson Pfiester.reading.20240101-20240129.academic.json", "r", encoding="utf8"))
+        academic_data = self.get_academic_data()
+        coaching_data = self.get_coaching_data()
 
         progress_completion = self.check_progressing_optimally(academic_data)
         # print(progress_completion.choices[0].message.content)
