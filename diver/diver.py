@@ -8,7 +8,11 @@ import prompts
 
 class Diver:
 
-    def __init__(self):
+    def __init__(self,
+                 openai_api_key=os.environ.get("OPENAI_API_KEY"),
+                 academic_token=os.environ.get("ACADEMIC_API_KEY"),
+                 coaching_token=os.environ.get("COACHING_API_KEY")
+                 ):
         self.inquiry = None
         self.subject = None
         self.date_end = None
@@ -16,7 +20,9 @@ class Diver:
         self.name = None
         self.email = None
         self.academic_data = {}
-        self.client = OpenAI()
+        self.client = OpenAI(api_key=openai_api_key)
+        self.academic_token = academic_token
+        self.coaching_token = coaching_token
 
     def define_parameters(self, name, email, date_start, date_end, subject, inquiry):
         self.name = name
@@ -28,7 +34,7 @@ class Diver:
 
     def get_academic_data(self):
         print("Downloading academic data...")
-        token = os.environ.get("ACADEMIC_API_KEY")
+        token = self.academic_token
         print(token)
         headers = {
             'Authorization': f"{token}"
@@ -61,7 +67,7 @@ class Diver:
 
     def get_coaching_data(self):
         print(f"Downloading coaching data...")
-        token = os.environ.get("COACHING_API_KEY")
+        token = self.coaching_token
         print(token)
         headers = {
             'Authorization': f"{token}"
@@ -114,31 +120,31 @@ class Diver:
         # print(learner_2hr_completion.choices[0].message.content)
 
         summary_data = {
-            "progressing_optimally": progress_completion.choices[0].message.content,
-            "correct_level": level_completion.choices[0].message.content,
-            "2hr_learner": learner_2hr_completion.choices[0].message.content
+            "progressing_optimally": json.loads(progress_completion.choices[0].message.content),
+            "correct_level": json.loads(level_completion.choices[0].message.content),
+            "2hr_learner": json.loads(learner_2hr_completion.choices[0].message.content)
         }
 
         reason_progress_completion = self.check_reason_for_lack_of_progression(academic_data, coaching_data,
                                                                                summary_data)
         # print(reason_progress_completion.choices[0].message.content)
-        summary_data["reason_progress_completion"] = reason_progress_completion.choices[0].message.content
+        summary_data["reason_progress_completion"] = json.loads(reason_progress_completion.choices[0].message.content)
 
         other_insight_completion = self.check_other_insight(academic_data, coaching_data, summary_data)
-        summary_data["other_insight"] = other_insight_completion.choices[0].message.content
+        summary_data["other_insight"] = json.loads(other_insight_completion.choices[0].message.content)
 
         important_completion = self.answer_important_problem(academic_data, coaching_data, summary_data)
         # print(important_completion.choices[0].message.content)
 
-        summary_data["important_problem"] = important_completion.choices[0].message.content
+        summary_data["important_problem"] = json.loads(important_completion.choices[0].message.content)
 
         need_todo_completion = self.answer_what_need_to_be_done(academic_data, coaching_data, summary_data)
 
-        summary_data["alpha_needs_todo"] = need_todo_completion.choices[0].message.content
+        summary_data["alpha_needs_todo"] = json.loads(need_todo_completion.choices[0].message.content)
 
         student_suggestion_completion = self.answer_suggestion_for_student(academic_data, coaching_data, summary_data)
-        print(student_suggestion_completion.choices[0].message.content)
-        summary_data["student_suggestion"] = student_suggestion_completion.choices[0].message.content
+        # print(student_suggestion_completion.choices[0].message.content)
+        summary_data["student_suggestion"] = json.loads(student_suggestion_completion.choices[0].message.content)
 
         # print(summary_data)
 
@@ -251,9 +257,27 @@ class Diver:
 
 
 if __name__ == '__main__':
-    diver = Diver()
-    diver.define_parameters('Branson Pfiester', 'branson.pfiester@alpha.school',
-                            '2024-01-01', '2024-01-29', 'reading',
-                            "Is the student struggling? "
-                            "Is there underlying friction or learning strategies that may assist her productivity as part of this new plan?")
-    diver.process_with_openai()
+    input_json = json.load(open('input.json', encoding='utf8'))
+    api_key = input("Please enter the open api key: ")
+    academic_key = input("Please enter the Academic API key ")
+    coaching_key = input("Please enter the Coaching API key ")
+    if (api_key == "") or (academic_key == "") or (coaching_key == ""):
+        print("you didn't enter one of the key, defaulting to use Environment Variables\n"
+              "Needed environment variables are:\n"
+              "- OPENAI_API_KEY: Open AI API key\n"
+              "- ACADEMIC_API_KEY: Academic Data API Key\n"
+              "- COACHING_API_KEY: Coaching API key")
+        diver = Diver()
+    else:
+        diver = Diver(api_key, academic_key, coaching_key)
+    studentName = input_json["studentName"]
+    studentEmail = input_json["studentEmail"]
+    subject = input_json["subject"]
+    startDate = input_json["startDate"]
+    endDate = input_json["endDate"]
+    question = input_json["question"]
+    diver.define_parameters(studentName, studentEmail,
+                            startDate, endDate, subject,
+                            question)
+    result = diver.process_with_openai()
+    json.dump(result, open("output.json", "w", encoding="utf8"))
