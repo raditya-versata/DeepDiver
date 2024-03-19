@@ -49,5 +49,6 @@ and to call the process can be done by calling the method
 the result would be in the result. 
 
 # History Note
+20240320-0103 - updated the model to use gpt-4-turbo-preview and use the output as json_object
+20240319-1939 - make it available to be used in console
 20240318-1648 - updated key
-20240319-1939 - make it 
