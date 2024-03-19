@@ -92,12 +92,13 @@ class Diver:
 
     def get_openai_suggestion(self, system_prompt, user_prompt):
         return self.client.chat.completions.create(
-            model="gpt-3.5-turbo",
+            model="gpt-4-turbo-preview",
             messages=[
                 {"role": "system",
                  "content": system_prompt},
                 {"role": "user", "content": user_prompt}
-            ]
+            ],
+            response_format={"type": "json_object"}
         )
 
     def process_with_openai(self):
